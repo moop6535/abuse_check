@@ -54,7 +54,7 @@ function abuse(ip) {
                 var whois = this.fetchText('body > div > div > div > div > div > table > tbody > tr > td');
                 if(casper.cli.get("show") == 'abuse' || casper.cli.get("show") == 'all') {
                     console.log("\nABUSE DETECTED!!!");
-                    this.echo("IP: " + ip + "\n" + number + " \n" + whois);
+                    this.echo("IP: " + ip + "\n" + "Abuse Reports: " + number + " \n" + whois);
                 }
                 abuseCount++;
                 if(ip.length === 10) {
@@ -114,7 +114,7 @@ function check() {
     }
     else {
         this.echo("\nFinished!");
-        this.echo(abuseCount + " out of " + lines.length + " ip(s) have abuse reported");
+        this.echo(abuseCount + " out of " + lines.length + " ip(s) have abuse reports");
         if(badIp.length != 0) {    
             badIp.sort(compareSecondColumn);
             this.echo("Bad IP(s):");

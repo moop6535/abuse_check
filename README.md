@@ -1,5 +1,5 @@
 # abuse_check
-A quick Phantom/CasperJS script I wrote to help me automate checking IP's against AbuseIPDB.com. 
+A quick Phantom/CasperJS script I wrote to help me automate checking IPs against AbuseIPDB.com. 
 
 My first real crack at JS browser automation, so be gentle and if there is something you really don't like feel free to do with it as you wish! 
 
