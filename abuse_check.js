@@ -18,6 +18,7 @@ var fs = require('fs');
 var file_h = fs.open(casper.cli.get(0), 'r');
 var lines = new Array;
 var badIp = [];
+var baseIP = [];
 
 var counter = 0;
 
@@ -50,13 +51,14 @@ function abuse(ip) {
                 }
             }
             else {                
-                var number =  this.fetchText('body > div > div > div > div > p > b');
-                var whois = this.fetchText('body > div > div > div > div > div > table > tbody > tr > td');
+                var number =  this.fetchText('body > div > div > div > div > div > section > div > div > div > p > b');
+                var whois = this.fetchText('body > div > div > div > div > div > section > div > div > div > table > tbody > tr > td');
                 if(casper.cli.get("show") == 'abuse' || casper.cli.get("show") == 'all') {
                     console.log("\nABUSE DETECTED!!!");
                     this.echo("IP: " + ip + "\n" + "Abuse Reports: " + number + " \n" + whois);
                 }
                 abuseCount++;
+                baseIP.push(ip);
                 if(ip.length === 10) {
                     badIp.push({ip:ip + "      |  Abuse Reports: ", abuse: +number});
                 }
@@ -120,6 +122,12 @@ function check() {
             this.echo("Bad IP(s):");
             for(i=0; i<badIp.length; i++) {
                 this.echo(badIp[i].ip + badIp[i].abuse); 
+            }
+            if(casper.cli.get("show") == 'list') {
+                this.echo("\n");
+                for(i=0; i<badIp.length; i++) {
+                    this.echo(baseIP[i]);
+                }
             }
         }
         else {
