@@ -73,10 +73,13 @@ function abuse(ip) {
                 } 
                 else if (ip.length === 14) {
                     badIp.push({ip:ip + "  |  Abuse Reports: ", abuse: +number});
-                }                 
+                } 
+                 else if (ip.length === 15) {
+                    badIp.push({ip:ip + " |  Abuse Reports: ", abuse: +number});
+                }                    
              }
 
-             if(!casper.cli.has("show")) {
+             if(!casper.cli.get("show") == 'abuse' || !casper.cli.get("show") == 'all' || casper.cli.get("show") == 'list' || !casper.cli.has("show")) {
                 
                 if(lines.length > 500) {
                     if(counter % 50 == 0) {
@@ -115,31 +118,41 @@ function check() {
         this.run(check);
     }
     else {
-        this.echo("\nFinished!");
-        this.echo(abuseCount + " out of " + lines.length + " ip(s) have abuse reports");
-        if(badIp.length != 0) {    
-            badIp.sort(compareSecondColumn);
-            this.echo("Bad IP(s):");
-            for(i=0; i<badIp.length; i++) {
-                this.echo(badIp[i].ip + badIp[i].abuse); 
+        if(casper.cli.get("show") != 'list_only') {
+            this.echo("\nFinished!");
+            this.echo(abuseCount + " out of " + lines.length + " ip(s) have abuse reports");
+            if(badIp.length != 0) {    
+                badIp.sort(compareSecondColumn);
+                this.echo("Bad IP(s):");
+                for(i=0; i<badIp.length; i++) {
+                    this.echo(badIp[i].ip + badIp[i].abuse); 
+                }
+                if(casper.cli.get("show") == 'list') {
+                    this.echo("\n");
+                    for(i=0; i<badIp.length; i++) {
+                        this.echo(baseIP[i]);
+                    }
+                }
             }
-            if(casper.cli.get("show") == 'list') {
-                this.echo("\n");
+            else {
+                this.echo("ALL IP's CLEAR");
+            }
+        }
+        else {
                 for(i=0; i<badIp.length; i++) {
                     this.echo(baseIP[i]);
                 }
             }
-        }
-        else {
-            this.echo("ALL IP's CLEAR");
-        }
+
         file_h.close();
         this.exit();
     }
 }
 
 casper.start().then(function() {
-    this.echo("Checking AbuseIpDb.com");
+    if(casper.cli.get("show") != 'list_only') {
+        this.echo("Checking AbuseIpDb.com");
+    }
 });
 
 casper.run(check);

@@ -14,11 +14,13 @@ My first real crack at JS browser automation, so be gentle and if there is somet
 ```casperjs abuse_check.js [ip list file]```
 
 ##Extra Argument:
-```--show=OPTION   Change verbosity. OPTIONS are 'abuse' & 'all'```
+```--show=OPTION   Change verbosity. OPTIONS are 'abuse' -- 'all' -- 'list' & 'list_only'```
 
 ##example:
 
 ```casperjs abuse_check.js list_of_ip.txt --show=abuse```
+
+```casperjs abuse_check.js list_of_ip.txt --show=list_only > ip_file_list.txt``` 
 
 ##NOTE
 IP file should have only 1 IP per line
