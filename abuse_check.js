@@ -7,6 +7,7 @@ var casper = require('casper').create( {
     verbose: true
 });
 
+//Capture IP file
 var input = casper.cli.get(0);
 
 if(!casper.cli.has(0)) {
@@ -32,6 +33,7 @@ var value = new Array;
 var currentIP = 0;
 var abuseCount = 0;
 
+//function to compare 2nd column of 2D array, in this case number of reported abuses -- passed as argument to sort() 
 function compareSecondColumn(a, b) {
     if (a.abuse === b.abuse) {
         return 0;
@@ -45,11 +47,12 @@ function compareSecondColumn(a, b) {
 function abuse(ip) {
     casper.wait(75, function() {
             var results = this.getPageContent();
-            if(results.indexOf("was not found in our database") !=-1 || results.indexOf("bingbot") !=-1) {
+            if(results.indexOf("was not found in our database") !=-1 || results.indexOf("bingbot") !=-1 || results.indexOf("Googlebot") !=-1) {
                 if(casper.cli.get("show") == 'all') {
                     console.log("\n" + ip + ": ALL CLEAR!");
                 }
             }
+            //There is abuse detected
             else {                
                 var number =  this.fetchText('body > div > div > div > div > div > section > div > div > div > p > b');
                 var whois = this.fetchText('body > div > div > div > div > div > section > div > div > div > table > tbody > tr > td');
@@ -58,6 +61,7 @@ function abuse(ip) {
                     this.echo("IP: " + ip + "\n" + "Abuse Reports: " + number + " \n" + whois);
                 }
                 abuseCount++;
+                //Add only IP to baseIP Array to use for printing
                 baseIP.push(ip);
                 if(ip.length === 10) {
                     badIp.push({ip:ip + "      |  Abuse Reports: ", abuse: +number});
@@ -74,7 +78,7 @@ function abuse(ip) {
                 else if (ip.length === 14) {
                     badIp.push({ip:ip + "  |  Abuse Reports: ", abuse: +number});
                 } 
-                 else if (ip.length === 15) {
+                else if (ip.length === 15) {
                     badIp.push({ip:ip + " |  Abuse Reports: ", abuse: +number});
                 }                    
              }
@@ -138,6 +142,7 @@ function check() {
                 this.echo("ALL IP's CLEAR");
             }
         }
+        //Print only IP's with flag == show=list_only
         else {
                 for(i=0; i<badIp.length; i++) {
                     this.echo(baseIP[i]);
